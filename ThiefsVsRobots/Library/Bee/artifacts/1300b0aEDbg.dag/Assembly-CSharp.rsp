@@ -364,8 +364,8 @@
 "Assets/Joystick Pack/Scripts/Joysticks/FloatingJoystick.cs"
 "Assets/Joystick Pack/Scripts/Joysticks/VariableJoystick.cs"
 "Assets/Scripts/CollisionGround.cs"
-"Assets/Scripts/ControlerPLayer.cs"
-"Assets/Scripts/GameControler.cs"
+"Assets/Scripts/PLayer.cs"
+"Assets/Scripts/Subject.cs"
 -langversion:9.0
 
 /deterministic

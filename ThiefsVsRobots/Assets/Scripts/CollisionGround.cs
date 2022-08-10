@@ -4,38 +4,49 @@ using UnityEngine;
 
 public class CollisionGround : MonoBehaviour
 {
+    [HideInInspector] public AudioSource Alarm;
     [SerializeField] private AudioClip _clipAlarm;
     [SerializeField] private Transform _alarm;
     [SerializeField] private Transform _player;
-    [SerializeField] float stepDistance = 0.02f;
+    [SerializeField] private float _stepDistance;
 
     private float _volumeAlarmMax = 1;
     private bool _alarmWork = false;
-    private float _volumeAlarm;
+    private float _distancePlayerAndAlarm;
+    private float _volume;
+
+    private void Start()
+    {
+        Alarm = GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
-        _volumeAlarm = Vector3.Distance(_alarm.position, _player.position);
-        Debug.Log(_volumeAlarm);
-        GetComponent<AudioSource>().volume = _volumeAlarmMax - ÑalculationDistance(_volumeAlarm);
+        SetVolumeAlarm();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Subject")
+        if (collision.collider.TryGetComponent(out Subject subject))
         {
             if (_alarmWork == false)
             {
                 _alarmWork = true;
-                GetComponent<AudioSource>().Play();                
+                Alarm.Play();
             }
-        }       
+        }
+    }
+
+    private void SetVolumeAlarm()
+    {      
+        Alarm.volume = _volumeAlarmMax - CalculateDistance();
     }
     
-    private float ÑalculationDistance(float volume)
+    private float CalculateDistance()
     {
-        volume = Mathf.Clamp01(volume * stepDistance);
-        return volume;
+        _distancePlayerAndAlarm = Vector3.Distance(_alarm.position, _player.position);
+        _volume = Mathf.Clamp01(_distancePlayerAndAlarm * _stepDistance);
+        return _volume;
     }
 }
 
