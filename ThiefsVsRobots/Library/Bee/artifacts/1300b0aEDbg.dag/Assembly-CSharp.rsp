@@ -363,7 +363,8 @@
 "Assets/Joystick Pack/Scripts/Joysticks/FixedJoystick.cs"
 "Assets/Joystick Pack/Scripts/Joysticks/FloatingJoystick.cs"
 "Assets/Joystick Pack/Scripts/Joysticks/VariableJoystick.cs"
-"Assets/Scripts/CollisionGround.cs"
+"Assets/Scripts/LogicAlarm.cs"
+"Assets/Scripts/LogicCollision.cs"
 "Assets/Scripts/PLayer.cs"
 "Assets/Scripts/Subject.cs"
 -langversion:9.0
