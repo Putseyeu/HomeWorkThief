@@ -8,43 +8,69 @@ public class Alarm : MonoBehaviour
 {
     [SerializeField] private float _pathTime;
    
-    private float _volumeAlarmMax = 1f;
     private float _volumeAlarmMin = 0;
     private AudioSource _soundAlarms;
-    private bool _alarmWork = false;
+    private Coroutine _makeLouder;
+    private Coroutine _makeQuieter;
+    private bool _makeLouderIsWork = false;
+    private bool _makeQuieterIsWork = false;
+    private float _tempVolume;
 
     private void Start()
     {
-        _soundAlarms = GetComponent<AudioSource>();                
+        _soundAlarms = GetComponent<AudioSource>();
+        _soundAlarms.volume = _volumeAlarmMin;
     }
 
-    private void OnTriggerEnter(Collider collision)
+    public void TurnSound()
     {
-        if (collision.TryGetComponent(out Thiefs thiefs))
+        _soundAlarms.Play();
+    }
+
+    public void StartMakeLouder()
+    {
+        if (_makeQuieterIsWork == true)
         {
-            if (_alarmWork == false)
-            {
-                _soundAlarms.volume = _volumeAlarmMax;
-                _soundAlarms.Play();
-                _alarmWork = true;
-            }
-            else
-            {
-                StartCoroutine(MakeQuieter());
-                _alarmWork = false;
-            }
+            StopCoroutine(_makeQuieter);
         }
+        
+        _makeLouderIsWork = true;
+        _makeLouder = StartCoroutine(MakeLouder());        
+    }
+
+    public void StarMakeQuieter()
+    {
+        if (_makeLouderIsWork == true)
+        {
+            StopCoroutine(_makeLouder);
+        }
+        
+        _makeQuieterIsWork = true;
+        _makeQuieter = StartCoroutine(MakeQuieter());
     }
 
     private IEnumerator MakeQuieter()
     {
-        float _pathRuningTime = 0;
+        float runningTime = 0;
 
-        while (_soundAlarms.volume > _volumeAlarmMin)
+        while (runningTime < _pathTime)
         {
-            _pathRuningTime += Time.deltaTime;
-            _soundAlarms.volume = _volumeAlarmMax - _pathRuningTime / _pathTime;
+            runningTime += Time.deltaTime;
+            _soundAlarms.volume = _tempVolume - runningTime / _pathTime;
             yield return null;
         }       
+    }
+
+    private IEnumerator MakeLouder()
+    {
+        float runningTime = 0;
+
+        while (runningTime < _pathTime)
+        {
+            runningTime += Time.deltaTime;
+            _soundAlarms.volume = runningTime/ _pathTime;
+            _tempVolume = _soundAlarms.volume;
+            yield return null;
+        }
     }
 }
